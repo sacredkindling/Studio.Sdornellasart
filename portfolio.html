@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio — Stephen D'Ornellas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <nav class="wrap">
+    <a href="index.html" class="brand">Stephen D'Ornellas</a>
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="statement.html">Statement</a>
+      <a href="portfolio.html" class="active">Portfolio</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section>
+    <div class="wrap">
+      <div class="kicker">Portfolio</div>
+      <h2 class="page-title">Selected work</h2>
+      <div class="filters">
+        <button data-filter="all" class="active">All</button>
+        <button data-filter="available">Available</button>
+        <button data-filter="sold">Sold</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Stephen D'Ornellas. All artwork remains the property of the artist.</div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Add your own pieces here. Set "image" to a filename in an /images folder
+  // once you upload real photos (e.g. "images/low-tide.jpg"); leave blank
+  // to show a placeholder box for now.
+  const works = [
+    {title:"Low Tide", medium:"Oil on canvas", size:"24 × 30 in", price:"$850", status:"available", image:""},
+    {title:"Kitchen Window, Morning", medium:"Gouache on paper", size:"11 × 14 in", price:"$320", status:"sold", image:""},
+    {title:"Two Chairs", medium:"Oil on panel", size:"18 × 24 in", price:"$600", status:"available", image:""},
+    {title:"After the Rain", medium:"Watercolor", size:"9 × 12 in", price:"$210", status:"sold", image:""},
+    {title:"Field Notes I", medium:"Acrylic on canvas", size:"30 × 40 in", price:"$1,200", status:"available", image:""},
+    {title:"Blue Hour", medium:"Oil on canvas", size:"20 × 20 in", price:"$540", status:"sold", image:""}
+  ];
+
+  const grid = document.getElementById('grid');
+  function render(filter){
+    grid.innerHTML = '';
+    works
+      .filter(w => filter === 'all' || w.status === filter)
+      .forEach(w => {
+        const el = document.createElement('div');
+        el.className = 'piece';
+        const thumb = w.image
+          ? `<div class="thumb" style="background:var(--card);"><img src="${w.image}" alt="${w.title}" style="width:100%;height:100%;object-fit:cover;"></div>`
+          : `<div class="thumb">photo</div>`;
+        el.innerHTML = `
+          ${thumb}
+          <div class="meta">
+            <h3>${w.title}</h3>
+            <div class="sub">${w.medium} · ${w.size}</div>
+            <div class="price">${w.status === 'sold' ? '' : w.price}</div>
+            <span class="status ${w.status}">${w.status === 'sold' ? 'Sold' : 'Available'}</span>
+          </div>`;
+        grid.appendChild(el);
+      });
+  }
+  render('all');
+
+  document.querySelectorAll('.filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render(btn.dataset.filter);
+    });
+  });
+</script>
+</body>
+</html>
